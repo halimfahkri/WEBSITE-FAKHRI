@@ -17,9 +17,9 @@
          -> Choose any color 
          -> Copy the color mode (HSL)
   */
-  --hue: 358;
+  --hue: 194;
   --first-color: hsl(var(--hue), 80%, 49%);
-  --first-color-alt: hsl(var(--hue), 76%, 45%);
+  --first-color-alt: hsl(var(--hue), 100%, 45%);
   --white-color: hsl(0, 0%, 98%);
   --black-color: hsl(0, 0%, 1%);
   --text-color: hsl(var(--hue), 2%, 66%);
@@ -82,6 +82,7 @@ textarea,
 button {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
+  justify-items: center;
 }
 
 body {
@@ -113,6 +114,47 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+/*=============== WORKS ===============*/
+.works__container {
+  grid-template-columns: repeat(3, 1fr); /* 3 kolom per baris */
+}
+
+@media screen and (max-width: 768px) {
+  .works__container {
+    grid-template-columns: 1fr; /* 1 kolom di mobile */
+  }
+}
+
+.works__card {
+  background-color: var(--container-color);
+  padding: 2rem 1.5rem;
+  border-radius: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.works__card:hover {
+  transform: translateY(-0.5rem);
+}
+
+.works__icon {
+  margin-bottom: 1.5rem;
+}
+
+.works__icon i {
+  font-size: 2rem;
+  color: var(--first-color);
+}
+
+.works__name {
+  font-size: var(--h3-font-size);
+  margin-bottom: 1rem;
+}
+
+.works__description {
+  font-size: var(--small-font-size);
+  color: var(--text-color);
 }
 
 /*=============== REUSABLE CSS CLASSES ===============*/
@@ -446,6 +488,175 @@ img {
   transform: scale(1.2);
 }
 
+/*=============== PROJECT MODALS ===============*/
+.project-modal {
+   display: none;
+   position: fixed;
+   z-index: 1000;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.9);
+   overflow: auto;
+   animation: fadeIn 0.3s;
+}
+
+.project-modal .modal-content {
+   background-color: var(--container-color);
+   margin: 5% auto;
+   padding: 2rem;
+   border-radius: 1rem;
+   width: 90%;
+   max-width: 800px;
+   position: relative;
+}
+
+.project-modal .close-modal {
+   position: absolute;
+   top: 1rem;
+   right: 1.5rem;
+   color: var(--text-color);
+   font-size: 2rem;
+   font-weight: bold;
+   cursor: pointer;
+   transition: color 0.3s;
+}
+
+.project-modal .close-modal:hover {
+   color: var(--first-color);
+}
+
+.project-modal .modal-title {
+   font-size: var(--h1-font-size);
+   margin-bottom: 1.5rem;
+   text-align: center;
+   color: var(--first-color);
+}
+
+.project-modal .modal-description {
+   margin-top: 1.5rem;
+   padding: 1rem;
+   background-color: hsla(0, 0%, 100%, 0.05);
+   border-radius: 0.5rem;
+}
+
+.project-modal .modal-description h3 {
+   font-size: var(--h2-font-size);
+   margin-bottom: 0.5rem;
+}
+
+.project-modal .modal-description p {
+   margin-bottom: 0.5rem;
+   font-size: var(--small-font-size);
+}
+
+.project-tech {
+   display: flex;
+   gap: 1rem;
+   margin-top: 1rem;
+}
+
+.project-tech img {
+   width: 30px;
+   height: 30px;
+}
+
+/* Carousel Styles */
+.project-modal .carousel {
+   position: relative;
+   width: 100%;
+   max-height: 500px;
+   overflow: hidden;
+   border-radius: 0.5rem;
+}
+
+.project-modal .carousel-inner {
+   display: flex;
+   transition: transform 0.5s ease;
+}
+
+.project-modal .carousel-item {
+   min-width: 100%;
+   position: relative;
+}
+
+.project-modal .carousel-item img {
+   width: 100%;
+   height: auto;
+   max-height: 450px;
+   object-fit: contain;
+   display: block;
+}
+
+.project-modal .carousel-control {
+   position: absolute;
+   top: 50%;
+   transform: translateY(-50%);
+   background-color: rgba(0, 0, 0, 0.5);
+   color: white;
+   border: none;
+   padding: 1rem;
+   cursor: pointer;
+   z-index: 10;
+   font-size: 1.5rem;
+   border-radius: 50%;
+   width: 40px;
+   height: 40px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: background-color 0.3s;
+}
+
+.project-modal .carousel-control:hover {
+   background-color: var(--first-color);
+}
+
+.project-modal .prev {
+   left: 1rem;
+}
+
+.project-modal .next {
+   right: 1rem;
+}
+
+.project-modal .carousel-indicators {
+   position: absolute;
+   bottom: 1rem;
+   left: 50%;
+   transform: translateX(-50%);
+   display: flex;
+   gap: 0.5rem;
+   z-index: 10;
+}
+
+.project-modal .indicator {
+   width: 10px;
+   height: 10px;
+   border-radius: 50%;
+   background-color: rgba(255, 255, 255, 0.5);
+   cursor: pointer;
+   transition: background-color 0.3s;
+}
+
+.project-modal .indicator.active {
+   background-color: var(--first-color);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+   .project-modal .modal-content {
+      margin: 10% auto;
+      width: 95%;
+      padding: 1rem;
+   }
+   
+   .project-modal .carousel-item img {
+      max-height: 300px;
+   }
+}
+
 /*=============== SERVICES ===============*/
 .services__card{
   background-color: var(--container-color);
@@ -489,33 +700,109 @@ img {
   transform: translate(.25rem, -.25rem);
 }
 
+
 /*=============== EXPERIENCE ===============*/
-.experience__container{
-  row-gap: 2rem;
-}
-
-.experience__card{
+.experience__container {
   display: grid;
-  row-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-.experience__company{
-  font-size: var(--h2-font-size);
-}
-
-.experience__data{
+.experience__card {
   background-color: var(--container-color);
-  padding: 1.5rem;
   border-radius: 1.5rem;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  border: 1px solid hsla(var(--hue), 80%, 49%, 0.2);
 }
 
-.experience__profession{
+.experience__card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.experience__header {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--container-color);
+}
+
+.experience__company {
+  font-size: var(--h2-font-size);
+  color: var(--white-color);
+  margin-bottom: 0.5rem;
+  font-weight: var(--font-semi-bold);
+}
+
+.experience__image {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.experience__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.experience__card:hover .experience__img {
+  transform: scale(1.05);
+}
+
+.experience__data {
+  padding: 1.5rem;
+}
+
+.experience__profession {
   font-size: var(--h3-font-size);
-  margin: .5rem;
+  margin-bottom: 0.5rem;
+  color: var(--first-color);
+  font-weight: var(--font-medium);
 }
 
-.experience__description{
+.experience__date {
+  display: inline-block;
+  background-color: hsla(var(--hue), 80%, 49%, 0.1);
+  color: var(--first-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4rem;
+  font-size: var(--small-font-size);
+  margin-bottom: 1rem;
+}
+
+.experience__description {
   color: var(--text-color);
+  margin-bottom: 1.5rem;
+  font-size: var(--small-font-size);
+  line-height: 1.6;
+}
+
+.experience__button {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.experience__button i {
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .experience__container {
+    grid-template-columns: 1fr;
+  }
+  
+  .experience__image {
+    height: 150px;
+  }
 }
 
 /*=============== CONTACT ===============*/
@@ -576,18 +863,19 @@ img {
   justify-self: center;
 }
 
-.footer__Links{
+.footer__links{
   display: flex;
   justify-content: center;
   columns: 2rem;
+  gap: 2rem;
 }
 
-.footer__Link{
+.footer__link{
   color: var(--white-color);
   transition: color .4s;
 }
 
-.footer__Link:hover{
+.footer__link:hover{
   color: var(--text-color);
 }
 
@@ -597,7 +885,7 @@ img {
   column-gap: 1.5rem;
 }
 
-.footer__social-Link{
+.footer__social-link{
   width: 2.5rem;
   height: 2.5rem;
   background-color: var(--first-color);
@@ -609,7 +897,7 @@ img {
   transition: background-color .4s, color .4s;
 }
 
-.footer__social-Link:hover{
+.footer__social-link:hover{
   background-color: var(--white-color);
   color: var(--black-color);
 }
