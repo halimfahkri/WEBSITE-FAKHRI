@@ -17,7 +17,7 @@
          -> Choose any color 
          -> Copy the color mode (HSL)
   */
-  --hue: 194;
+  --hue: 270;
   --first-color: hsl(var(--hue), 80%, 49%);
   --first-color-alt: hsl(var(--hue), 100%, 45%);
   --white-color: hsl(0, 0%, 98%);
@@ -291,7 +291,7 @@ img {
 }
 
 .info__image{
-  background: white;
+  background: rgb(128, 0, 255);
   height: 190px;
   border-radius: 2rem;
   display: grid;
@@ -347,7 +347,7 @@ img {
 }
 
 .about__image{
-  background: white;
+  background: rgb(128, 0, 255);
   height: 180px;
   border-radius: 2rem;
   display: grid;
