@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
    });
 
+   
    function closeCertificateModal() {
       certificateModal.classList.add('closing');
       setTimeout(() => {
@@ -187,6 +188,19 @@ document.addEventListener('DOMContentLoaded', function () {
    window.addEventListener('click', function (e) {
       if (e.target === certificateModal) {
          closeCertificateModal();
+
+   certificateClose.addEventListener('click', function () {
+      certificateModal.style.display = "none";
+      document.body.style.overflow = "auto";
+      certificateImage.src = "";
+   });
+
+   window.addEventListener('click', function (e) {
+      if (e.target === certificateModal) {
+         certificateModal.style.display = "none";
+         document.body.style.overflow = "auto";
+         certificateImage.src = "";
+
       }
    });
 });
