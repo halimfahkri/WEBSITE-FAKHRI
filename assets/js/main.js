@@ -3,7 +3,7 @@ const contactForm = document.getElementById('contact-form'),
    contactMessage = document.getElementById('contact__message')
 
 const sendEmail = (e) => {
-   e.preventDevault()
+   e.preventDefault()
 
    // serviceID - templateID - #form - publicKey
    emailjs.sendForm('service_kbyiinc', 'template_mg62wp9', '#contact-form', 'ZLFTsikxYTonmdzw7')
@@ -148,6 +148,35 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCarousel();
          }, 5000);
       });
+   });
+
+   // Certificate Modal functionality
+   const certificateBtns = document.querySelectorAll('.view-certificate-btn');
+   const certificateModal = document.getElementById('certificate-modal');
+   const certificateImage = document.getElementById('certificate-image');
+   const certificateClose = document.querySelector('.certificate-modal-close');
+
+   certificateBtns.forEach(btn => {
+      btn.addEventListener('click', function () {
+         const certificateSrc = this.getAttribute('data-certificate');
+         certificateImage.src = certificateSrc;
+         certificateModal.style.display = "block";
+         document.body.style.overflow = "hidden";
+      });
+   });
+
+   certificateClose.addEventListener('click', function () {
+      certificateModal.style.display = "none";
+      document.body.style.overflow = "auto";
+      certificateImage.src = "";
+   });
+
+   window.addEventListener('click', function (e) {
+      if (e.target === certificateModal) {
+         certificateModal.style.display = "none";
+         document.body.style.overflow = "auto";
+         certificateImage.src = "";
+      }
    });
 });
 
