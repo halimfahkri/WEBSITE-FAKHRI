@@ -3,7 +3,7 @@ const contactForm = document.getElementById('contact-form'),
    contactMessage = document.getElementById('contact__message')
 
 const sendEmail = (e) => {
-   e.preventDevault()
+   e.preventDefault()
 
    // serviceID - templateID - #form - publicKey
    emailjs.sendForm('service_kbyiinc', 'template_mg62wp9', '#contact-form', 'ZLFTsikxYTonmdzw7')
@@ -72,18 +72,25 @@ document.addEventListener('DOMContentLoaded', function () {
       });
    });
 
+   function closeProjectModal(modal) {
+      modal.classList.add('closing');
+      setTimeout(() => {
+         modal.style.display = "none";
+         modal.classList.remove('closing');
+         document.body.style.overflow = "auto";
+      }, 300); // Match animation duration
+   }
+
    closeBtns.forEach(btn => {
       btn.addEventListener('click', function () {
          const modal = this.closest('.project-modal');
-         modal.style.display = "none";
-         document.body.style.overflow = "auto";
+         closeProjectModal(modal);
       });
    });
 
    window.addEventListener('click', function (e) {
       if (e.target.classList.contains('project-modal')) {
-         e.target.style.display = "none";
-         document.body.style.overflow = "auto";
+         closeProjectModal(e.target);
       }
    });
 
@@ -148,6 +155,39 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCarousel();
          }, 5000);
       });
+   });
+
+   // Certificate Modal functionality
+   const certificateBtns = document.querySelectorAll('.view-certificate-btn');
+   const certificateModal = document.getElementById('certificate-modal');
+   const certificateImage = document.getElementById('certificate-image');
+   const certificateClose = document.querySelector('.certificate-modal-close');
+
+   certificateBtns.forEach(btn => {
+      btn.addEventListener('click', function () {
+         const certificateSrc = this.getAttribute('data-certificate');
+         certificateImage.src = certificateSrc;
+         certificateModal.style.display = "block";
+         document.body.style.overflow = "hidden";
+      });
+   });
+
+   function closeCertificateModal() {
+      certificateModal.classList.add('closing');
+      setTimeout(() => {
+         certificateModal.style.display = "none";
+         certificateModal.classList.remove('closing');
+         document.body.style.overflow = "auto";
+         certificateImage.src = "";
+      }, 300); // Match animation duration
+   }
+
+   certificateClose.addEventListener('click', closeCertificateModal);
+
+   window.addEventListener('click', function (e) {
+      if (e.target === certificateModal) {
+         closeCertificateModal();
+      }
    });
 });
 
