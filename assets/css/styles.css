@@ -479,6 +479,7 @@ img {
   transform: scale(1.2);
 }
 
+
 /*=============== PROJECT MODALS ===============*/
 .project-modal {
   display: none;
@@ -552,6 +553,39 @@ img {
   width: 30px;
   height: 30px;
 }
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* State show & closing */
+.project-modal.show {
+  display: block;
+  animation: fadeIn 0.3s forwards;
+}
+
+.project-modal.closing {
+  animation: fadeOut 0.3s forwards;
+}
+
+
 
 /* Carousel Styles */
 .project-modal .carousel {
@@ -820,11 +854,12 @@ img {
 }
 
 .contact__message {
-  position: relative;
-  left: 0;
-  bottom: 4.5rem;
+  margin-top: 1rem;
   font-size: var(--smaller-font-size);
+  text-align: center;
+  color: var(--first-color);
 }
+
 
 /*=============== FOOTER ===============*/
 .footer {
@@ -1142,7 +1177,6 @@ img {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.9);
   overflow: auto;
-  animation: fadeIn 0.3s;
 }
 
 .certificate-modal-content {
@@ -1187,7 +1221,7 @@ img {
   transform: scale(1.02);
 }
 
-/* Animation keyframes */
+/* Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1195,18 +1229,6 @@ img {
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -1220,34 +1242,15 @@ img {
   }
 }
 
-@keyframes zoomOut {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(0.8);
-  }
+.certificate-modal.show {
+  display: block;
+  animation: fadeIn 0.3s forwards;
 }
 
-/* Closing animation classes */
 .certificate-modal.closing {
-  animation: fadeOut 0.3s;
+  animation: fadeOut 0.3s forwards;
 }
 
-.certificate-modal.closing .certificate-modal-content {
-  animation: zoomOut 0.3s ease-out;
-}
-
-.project-modal.closing {
-  animation: fadeOut 0.3s;
-}
-
-.project-modal.closing .modal-content {
-  animation: zoomOut 0.3s ease-out;
-}
 
 /* Responsive */
 @media screen and (max-width: 768px) {
