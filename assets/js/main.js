@@ -462,6 +462,89 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Filter functionality
+  const filterButtons = document.querySelectorAll('.works__filter-btn');
+  const workCards = document.querySelectorAll('.works__card');
+  
+  // Filter cards based on category
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active class from all buttons
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      const filterValue = this.getAttribute('data-filter');
+      
+      // Show/hide cards based on filter
+      workCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        
+        if (filterValue === 'all' || filterValue === category) {
+          // Show card with animation
+          card.style.display = 'flex';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 10);
+        } else {
+          // Hide card with animation
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+  
+  // Add click effect to cards
+  workCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'scale(0.95)';
+      
+      setTimeout(() => {
+        this.style.transform = 'translateY(-10px) scale(1.02)';
+      }, 200);
+      
+      // Toggle a "selected" state
+      this.classList.toggle('selected');
+      
+      // In a real implementation, you might want to:
+      // 1. Open a modal with more details
+      // 2. Navigate to a project page
+      // 3. Show more information
+      const cardTitle = this.querySelector('.works__name').textContent;
+      console.log('Clicked on:', cardTitle);
+    });
+  });
+  
+  // Add CSS for selected state
+  const style = document.createElement('style');
+  style.textContent = `
+    .works__card.selected {
+      border-color: var(--first-color);
+      box-shadow: 0 0 0 3px rgba(var(--first-color-rgb, 100, 100, 255), 0.2);
+      transform: translateY(-10px) scale(1.02);
+    }
+    
+    .works__card.selected::after {
+      opacity: 1;
+    }
+    
+    .works__card.selected .works__circle {
+      opacity: 0.3;
+      transform: scale(1.15);
+    }
+  `;
+  document.head.appendChild(style);
+});
+
 
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
