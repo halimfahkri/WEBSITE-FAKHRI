@@ -545,6 +545,245 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(style);
 });
 
+// Portfolio Background Interactions
+document.addEventListener('DOMContentLoaded', function() {
+  // Create particles
+  createParticles();
+  
+  // Create floating shapes
+  createFloatingShapes();
+  
+  // Initialize mouse interactions
+  initMouseInteractions();
+  
+  // Initialize scroll progress
+  initScrollProgress();
+  
+  // Initialize parallax effects
+  initParallaxEffects();
+  
+  // Initialize dynamic background
+  initDynamicBackground();
+});
+
+// Create floating particles
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
+  const particleCount = 50;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    
+    // Random properties
+    const size = Math.random() * 60 + 20;
+    const posX = Math.random() * 100;
+    const posY = Math.random() * 100;
+    const duration = Math.random() * 20 + 10;
+    const delay = Math.random() * 5;
+    
+    // Apply styles
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${posX}%`;
+    particle.style.top = `${posY}%`;
+    particle.style.animationDuration = `${duration}s`;
+    particle.style.animationDelay = `${delay}s`;
+    particle.style.opacity = Math.random() * 0.2 + 0.1;
+    
+    // Random color variation
+    const hue = Math.floor(Math.random() * 60) + 200; // Blue-purple range
+    particle.style.background = `radial-gradient(circle at 30% 30%, hsl(${hue}, 80%, 60%) 0%, transparent 70%)`;
+    
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// Create floating shapes
+function createFloatingShapes() {
+  const shapesContainer = document.getElementById('floatingShapes');
+  const shapeTypes = ['circle', 'triangle', 'square'];
+  const shapeCount = 15;
+  
+  for (let i = 0; i < shapeCount; i++) {
+    const shape = document.createElement('div');
+    const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+    
+    shape.classList.add('shape', type);
+    
+    // Random properties
+    const size = Math.random() * 80 + 40;
+    const posX = Math.random() * 100;
+    const posY = Math.random() * 100;
+    const duration = Math.random() * 30 + 20;
+    const delay = Math.random() * 10;
+    const hue = Math.floor(Math.random() * 60) + 200;
+    
+    // Apply styles
+    shape.style.width = `${size}px`;
+    shape.style.height = `${size}px`;
+    shape.style.left = `${posX}%`;
+    shape.style.top = `${posY}%`;
+    shape.style.animationDuration = `${duration}s`;
+    shape.style.animationDelay = `${delay}s`;
+    shape.style.opacity = Math.random() * 0.15 + 0.05;
+    
+    // Color based on type
+    if (type === 'circle') {
+      shape.style.background = `radial-gradient(circle, hsl(${hue}, 80%, 60%) 0%, transparent 70%)`;
+    } else if (type === 'triangle') {
+      shape.style.borderBottomColor = `hsl(${hue}, 80%, 60%)`;
+    } else {
+      shape.style.background = `hsl(${hue}, 80%, 60%)`;
+    }
+    
+    shapesContainer.appendChild(shape);
+  }
+}
+
+// Mouse interactions
+function initMouseInteractions() {
+  const interactiveArea = document.getElementById('interactiveArea');
+  const cursorTrail = document.getElementById('cursorTrail');
+  const particles = document.querySelectorAll('.particle');
+  const shapes = document.querySelectorAll('.shape');
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let trailX = 0;
+  let trailY = 0;
+  const speed = 0.1;
+  
+  // Mouse move effect
+  interactiveArea.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    // Show cursor trail
+    cursorTrail.style.opacity = '0.5';
+    
+    // Apply magnetic effect to particles
+    particles.forEach(particle => {
+      const rect = particle.getBoundingClientRect();
+      const particleX = rect.left + rect.width / 2;
+      const particleY = rect.top + rect.height / 2;
+      const distance = Math.sqrt(
+        Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2)
+      );
+      
+      if (distance < 150) {
+        const force = (150 - distance) / 150;
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const moveX = Math.cos(angle) * force * 20;
+        const moveY = Math.sin(angle) * force * 20;
+        
+        particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      }
+    });
+    
+    // Apply effect to shapes
+    shapes.forEach(shape => {
+      const rect = shape.getBoundingClientRect();
+      const shapeX = rect.left + rect.width / 2;
+      const shapeY = rect.top + rect.height / 2;
+      const distance = Math.sqrt(
+        Math.pow(mouseX - shapeX, 2) + Math.pow(mouseY - shapeY, 2)
+      );
+      
+      if (distance < 200) {
+        const force = (200 - distance) / 200;
+        shape.style.transform += ` scale(${1 + force * 0.2})`;
+      }
+    });
+  });
+  
+  // Mouse leave effect
+  interactiveArea.addEventListener('mouseleave', () => {
+    cursorTrail.style.opacity = '0';
+  });
+  
+  // Smooth cursor trail animation
+  function animateCursorTrail() {
+    trailX += (mouseX - trailX) * speed;
+    trailY += (mouseY - trailY) * speed;
+    
+    cursorTrail.style.left = `${trailX}px`;
+    cursorTrail.style.top = `${trailY}px`;
+    
+    // Pulsing effect
+    const scale = 1 + Math.sin(Date.now() * 0.002) * 0.2;
+    cursorTrail.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    
+    requestAnimationFrame(animateCursorTrail);
+  }
+  
+  animateCursorTrail();
+}
+
+// Scroll progress indicator
+function initScrollProgress() {
+  const scrollProgress = document.getElementById('scrollProgress');
+  
+  window.addEventListener('scroll', () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrolled = (scrollTop / (documentHeight - windowHeight)) * 100;
+    
+    scrollProgress.style.transform = `scaleX(${scrolled / 100})`;
+  });
+}
+
+// Parallax effects
+function initParallaxEffects() {
+  const parallaxLayers = document.querySelectorAll('.parallax-layer');
+  
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    
+    parallaxLayers.forEach((layer, index) => {
+      const speed = 0.5 * (index + 1);
+      const yPos = -(scrolled * speed);
+      layer.style.transform = `translateY(${yPos}px)`;
+    });
+  });
+}
+
+// Dynamic background effects
+function initDynamicBackground() {
+  const waves = document.querySelectorAll('.wave');
+  const grid = document.querySelector('.background-grid');
+  
+  // Wave interaction on scroll
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset * 0.5;
+    
+    waves.forEach((wave, index) => {
+      wave.style.transform = `translateX(${scrolled * (index + 1) * 0.1}px)`;
+    });
+    
+    // Grid distortion effect
+    grid.style.transform = `skewY(${Math.sin(scrolled * 0.001) * 2}deg)`;
+  });
+  
+  // Random light bursts
+  setInterval(() => {
+    const bursts = document.querySelectorAll('.light-burst');
+    bursts.forEach(burst => {
+      const randomX = Math.random() * 100;
+      const randomY = Math.random() * 100;
+      burst.style.left = `${randomX}%`;
+      burst.style.top = `${randomY}%`;
+    });
+  }, 10000);
+  
+  // Color shift animation
+  setInterval(() => {
+    const hueShift = Math.sin(Date.now() * 0.0005) * 30;
+    document.documentElement.style.setProperty('--hue-shift', `${hueShift}`);
+  }, 50);
+}
+
 
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
