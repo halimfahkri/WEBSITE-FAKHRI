@@ -545,243 +545,264 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(style);
 });
 
-// Portfolio Background Interactions
+// Projects Section Interactions
 document.addEventListener('DOMContentLoaded', function() {
-  // Create particles
-  createParticles();
-  
-  // Create floating shapes
-  createFloatingShapes();
-  
-  // Initialize mouse interactions
-  initMouseInteractions();
-  
-  // Initialize scroll progress
-  initScrollProgress();
-  
-  // Initialize parallax effects
-  initParallaxEffects();
-  
-  // Initialize dynamic background
-  initDynamicBackground();
+  // Initialize projects section
+  initProjectsFilter();
+  initModalSystem();
+  initImageLoading();
+  initHoverEffects();
 });
 
-// Create floating particles
-function createParticles() {
-  const particlesContainer = document.getElementById('particles');
-  const particleCount = 50;
-  
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
+// Initialize projects filter
+function initProjectsFilter() {
+  // Create filter buttons container if it doesn't exist
+  const projectsSection = document.getElementById('projects');
+  if (!projectsSection.querySelector('.projects__filter')) {
+    const filterContainer = document.createElement('div');
+    filterContainer.className = 'projects__filter container';
     
-    // Random properties
-    const size = Math.random() * 60 + 20;
-    const posX = Math.random() * 100;
-    const posY = Math.random() * 100;
-    const duration = Math.random() * 20 + 10;
-    const delay = Math.random() * 5;
+    const filters = [
+      { id: 'all', text: 'All Projects' },
+      { id: 'architecture', text: 'Architecture' },
+      { id: 'low-poly', text: 'Low Poly' },
+      { id: 'hardsurface', text: 'Hard Surface' }
+    ];
     
-    // Apply styles
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    particle.style.left = `${posX}%`;
-    particle.style.top = `${posY}%`;
-    particle.style.animationDuration = `${duration}s`;
-    particle.style.animationDelay = `${delay}s`;
-    particle.style.opacity = Math.random() * 0.2 + 0.1;
-    
-    // Random color variation
-    const hue = Math.floor(Math.random() * 60) + 200; // Blue-purple range
-    particle.style.background = `radial-gradient(circle at 30% 30%, hsl(${hue}, 80%, 60%) 0%, transparent 70%)`;
-    
-    particlesContainer.appendChild(particle);
-  }
-}
-
-// Create floating shapes
-function createFloatingShapes() {
-  const shapesContainer = document.getElementById('floatingShapes');
-  const shapeTypes = ['circle', 'triangle', 'square'];
-  const shapeCount = 15;
-  
-  for (let i = 0; i < shapeCount; i++) {
-    const shape = document.createElement('div');
-    const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
-    
-    shape.classList.add('shape', type);
-    
-    // Random properties
-    const size = Math.random() * 80 + 40;
-    const posX = Math.random() * 100;
-    const posY = Math.random() * 100;
-    const duration = Math.random() * 30 + 20;
-    const delay = Math.random() * 10;
-    const hue = Math.floor(Math.random() * 60) + 200;
-    
-    // Apply styles
-    shape.style.width = `${size}px`;
-    shape.style.height = `${size}px`;
-    shape.style.left = `${posX}%`;
-    shape.style.top = `${posY}%`;
-    shape.style.animationDuration = `${duration}s`;
-    shape.style.animationDelay = `${delay}s`;
-    shape.style.opacity = Math.random() * 0.15 + 0.05;
-    
-    // Color based on type
-    if (type === 'circle') {
-      shape.style.background = `radial-gradient(circle, hsl(${hue}, 80%, 60%) 0%, transparent 70%)`;
-    } else if (type === 'triangle') {
-      shape.style.borderBottomColor = `hsl(${hue}, 80%, 60%)`;
-    } else {
-      shape.style.background = `hsl(${hue}, 80%, 60%)`;
-    }
-    
-    shapesContainer.appendChild(shape);
-  }
-}
-
-// Mouse interactions
-function initMouseInteractions() {
-  const interactiveArea = document.getElementById('interactiveArea');
-  const cursorTrail = document.getElementById('cursorTrail');
-  const particles = document.querySelectorAll('.particle');
-  const shapes = document.querySelectorAll('.shape');
-  
-  let mouseX = 0;
-  let mouseY = 0;
-  let trailX = 0;
-  let trailY = 0;
-  const speed = 0.1;
-  
-  // Mouse move effect
-  interactiveArea.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    
-    // Show cursor trail
-    cursorTrail.style.opacity = '0.5';
-    
-    // Apply magnetic effect to particles
-    particles.forEach(particle => {
-      const rect = particle.getBoundingClientRect();
-      const particleX = rect.left + rect.width / 2;
-      const particleY = rect.top + rect.height / 2;
-      const distance = Math.sqrt(
-        Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2)
-      );
+    filters.forEach(filter => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-filter', filter.id);
+      btn.textContent = filter.text;
       
-      if (distance < 150) {
-        const force = (150 - distance) / 150;
-        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
-        const moveX = Math.cos(angle) * force * 20;
-        const moveY = Math.sin(angle) * force * 20;
+      if (filter.id === 'all') {
+        btn.classList.add('active');
+      }
+      
+      filterContainer.appendChild(btn);
+    });
+    
+    // Insert after section title
+    const sectionTitle = projectsSection.querySelector('.section__title');
+    sectionTitle.insertAdjacentElement('afterend', filterContainer);
+  }
+  
+  // Add data-category to project cards
+  const projectsCards = document.querySelectorAll('.projects__card');
+  const categories = ['architecture', 'low-poly', 'hardsurface', 'low-poly', 'architecture', 'low-poly', 'low-poly', 'low-poly', 'low-poly'];
+  
+  projectsCards.forEach((card, index) => {
+    card.setAttribute('data-category', categories[index] || 'all');
+  });
+  
+  // Filter functionality
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('filter-btn')) {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const filterValue = e.target.getAttribute('data-filter');
+      
+      // Update active button
+      filterBtns.forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      // Filter projects
+      projectsCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
         
-        particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        if (filterValue === 'all' || cardCategory === filterValue) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeInUp 0.4s forwards';
+        } else {
+          card.style.animation = 'fadeOut 0.3s forwards';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    }
+  });
+  
+  // Add fadeOut animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(20px);
       }
-    });
-    
-    // Apply effect to shapes
-    shapes.forEach(shape => {
-      const rect = shape.getBoundingClientRect();
-      const shapeX = rect.left + rect.width / 2;
-      const shapeY = rect.top + rect.height / 2;
-      const distance = Math.sqrt(
-        Math.pow(mouseX - shapeX, 2) + Math.pow(mouseY - shapeY, 2)
-      );
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Modal system
+function initModalSystem() {
+  const modalBtns = document.querySelectorAll('.view-project-btn');
+  const modals = document.querySelectorAll('.project-modal');
+  const closeBtns = document.querySelectorAll('.close-modal');
+  
+  // Open modal
+  modalBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const modalId = this.getAttribute('data-modal');
+      const modal = document.getElementById(modalId);
       
-      if (distance < 200) {
-        const force = (200 - distance) / 200;
-        shape.style.transform += ` scale(${1 + force * 0.2})`;
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        initCarousel(modal);
       }
     });
   });
   
-  // Mouse leave effect
-  interactiveArea.addEventListener('mouseleave', () => {
-    cursorTrail.style.opacity = '0';
+  // Close modal
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const modal = this.closest('.project-modal');
+      closeModal(modal);
+    });
   });
   
-  // Smooth cursor trail animation
-  function animateCursorTrail() {
-    trailX += (mouseX - trailX) * speed;
-    trailY += (mouseY - trailY) * speed;
+  // Close modal on outside click
+  modals.forEach(modal => {
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal(this);
+      }
+    });
+  });
+  
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const activeModal = document.querySelector('.project-modal.active');
+      if (activeModal) {
+        closeModal(activeModal);
+      }
+    }
+  });
+  
+  function closeModal(modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Carousel functionality
+function initCarousel(modal) {
+  const carouselInner = modal.querySelector('.carousel-inner');
+  const carouselItems = modal.querySelectorAll('.carousel-item');
+  const prevBtn = modal.querySelector('.carousel-control.prev');
+  const nextBtn = modal.querySelector('.carousel-control.next');
+  const indicators = modal.querySelectorAll('.indicator');
+  
+  let currentIndex = 0;
+  let slideInterval;
+  
+  function showSlide(index) {
+    if (index < 0) index = carouselItems.length - 1;
+    if (index >= carouselItems.length) index = 0;
     
-    cursorTrail.style.left = `${trailX}px`;
-    cursorTrail.style.top = `${trailY}px`;
+    currentIndex = index;
+    carouselInner.style.transform = `translateX(-${index * 100}%)`;
     
-    // Pulsing effect
-    const scale = 1 + Math.sin(Date.now() * 0.002) * 0.2;
-    cursorTrail.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    // Update active classes
+    carouselItems.forEach((item, i) => {
+      item.classList.remove('active');
+      if (i === index) item.classList.add('active');
+    });
     
-    requestAnimationFrame(animateCursorTrail);
+    indicators.forEach((indicator, i) => {
+      indicator.classList.remove('active');
+      if (i === index) indicator.classList.add('active');
+    });
   }
   
-  animateCursorTrail();
+  // Previous button
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      stopAutoSlide();
+      showSlide(currentIndex - 1);
+      startAutoSlide();
+    });
+  }
+  
+  // Next button
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      stopAutoSlide();
+      showSlide(currentIndex + 1);
+      startAutoSlide();
+    });
+  }
+  
+  // Indicators
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+      stopAutoSlide();
+      showSlide(index);
+      startAutoSlide();
+    });
+  });
+  
+  function startAutoSlide() {
+    stopAutoSlide();
+    slideInterval = setInterval(() => {
+      showSlide(currentIndex + 1);
+    }, 4000);
+  }
+  
+  function stopAutoSlide() {
+    clearInterval(slideInterval);
+  }
+  
+  // Start auto slide
+  startAutoSlide();
+  
+  // Pause on hover
+  if (carouselInner) {
+    carouselInner.addEventListener('mouseenter', stopAutoSlide);
+    carouselInner.addEventListener('mouseleave', startAutoSlide);
+  }
 }
 
-// Scroll progress indicator
-function initScrollProgress() {
-  const scrollProgress = document.getElementById('scrollProgress');
+// Image loading animation
+function initImageLoading() {
+  const projectImages = document.querySelectorAll('.projects__img');
   
-  window.addEventListener('scroll', () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrolled = (scrollTop / (documentHeight - windowHeight)) * 100;
+  projectImages.forEach(img => {
+    // Add loading class initially
+    img.classList.add('loading');
     
-    scrollProgress.style.transform = `scaleX(${scrolled / 100})`;
+    // Remove loading class when image loads
+    if (img.complete) {
+      img.classList.remove('loading');
+    } else {
+      img.addEventListener('load', function() {
+        this.classList.remove('loading');
+      });
+      
+      img.addEventListener('error', function() {
+        this.classList.remove('loading');
+        this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" font-family="Arial" font-size="16" text-anchor="middle" fill="%23999">Image not found</text></svg>';
+      });
+    }
   });
 }
 
-// Parallax effects
-function initParallaxEffects() {
-  const parallaxLayers = document.querySelectorAll('.parallax-layer');
+// Hover effects
+function initHoverEffects() {
+  const projectsCards = document.querySelectorAll('.projects__card');
   
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
+  projectsCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.zIndex = '10';
+    });
     
-    parallaxLayers.forEach((layer, index) => {
-      const speed = 0.5 * (index + 1);
-      const yPos = -(scrolled * speed);
-      layer.style.transform = `translateY(${yPos}px)`;
+    card.addEventListener('mouseleave', function() {
+      this.style.zIndex = '1';
     });
   });
-}
-
-// Dynamic background effects
-function initDynamicBackground() {
-  const waves = document.querySelectorAll('.wave');
-  const grid = document.querySelector('.background-grid');
-  
-  // Wave interaction on scroll
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset * 0.5;
-    
-    waves.forEach((wave, index) => {
-      wave.style.transform = `translateX(${scrolled * (index + 1) * 0.1}px)`;
-    });
-    
-    // Grid distortion effect
-    grid.style.transform = `skewY(${Math.sin(scrolled * 0.001) * 2}deg)`;
-  });
-  
-  // Random light bursts
-  setInterval(() => {
-    const bursts = document.querySelectorAll('.light-burst');
-    bursts.forEach(burst => {
-      const randomX = Math.random() * 100;
-      const randomY = Math.random() * 100;
-      burst.style.left = `${randomX}%`;
-      burst.style.top = `${randomY}%`;
-    });
-  }, 10000);
-  
-  // Color shift animation
-  setInterval(() => {
-    const hueShift = Math.sin(Date.now() * 0.0005) * 30;
-    document.documentElement.style.setProperty('--hue-shift', `${hueShift}`);
-  }, 50);
 }
 
 
