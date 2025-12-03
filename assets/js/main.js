@@ -1138,6 +1138,7 @@ window.addEventListener('load', function() {
 });
 
 
+
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
     origin: 'top',

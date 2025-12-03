@@ -929,7 +929,7 @@ img {
   text-align: center;
 }
 
-/* Enhanced Carousel */
+/* =============== FIXED CAROUSEL =============== */
 .carousel {
   position: relative;
   width: calc(100% - 5rem);
@@ -949,23 +949,26 @@ img {
 .carousel-item {
   min-width: 100%;
   height: 100%;
-  display: none;
+  flex-shrink: 0;
   position: relative;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .carousel-item.active {
+  opacity: 1;
   display: block;
   animation: imageFocus 0.8s ease-out;
 }
 
 @keyframes imageFocus {
   from {
-    transform: scale(1.1);
-    filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.95);
   }
   to {
+    opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
@@ -974,14 +977,15 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
-  transition: transform 0.5s;
+  display: block;
 }
 
+/* Carousel Navigation Controls */
 .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(var(--first-color-rgb), 0.7);
+  background: rgba(var(--first-color-rgb), 0.8);
   color: white;
   border: none;
   width: 50px;
@@ -993,10 +997,13 @@ img {
   z-index: 10;
   backdrop-filter: blur(5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .carousel-control:hover {
-  background: rgba(var(--first-color-rgb), 0.9);
+  background: rgba(var(--first-color-rgb), 0.95);
   transform: translateY(-50%) scale(1.15);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
@@ -1009,6 +1016,18 @@ img {
   right: 1.5rem;
 }
 
+.carousel-control.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carousel-control.disabled:hover {
+  transform: translateY(-50%);
+  background: rgba(var(--first-color-rgb), 0.8);
+}
+
+/* Carousel Indicators */
 .carousel-indicators {
   position: absolute;
   bottom: 1.5rem;
@@ -1029,6 +1048,8 @@ img {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
+  border: none;
+  padding: 0;
 }
 
 .indicator::before {
@@ -1050,6 +1071,10 @@ img {
   background: var(--first-color);
   transform: scale(1.4);
   box-shadow: 0 0 15px rgba(var(--first-color-rgb), 0.5);
+}
+
+.indicator.active::before {
+  left: 0;
 }
 
 .modal-description {
@@ -1179,7 +1204,7 @@ img {
   }
   
   .carousel {
-    height: 280px;
+    height: 250px;
   }
   
   .carousel-control {
@@ -1223,8 +1248,6 @@ img {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
-
-
 
 
 /*=============== WORKS ===============*/
