@@ -545,119 +545,181 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(style);
 });
 
-// Projects Section Interactions
+// Modern Projects Interactions - Fixed Version
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize projects section
-  initProjectsFilter();
-  initModalSystem();
-  initImageLoading();
-  initHoverEffects();
+  initModernProjects();
 });
 
-// Initialize projects filter
-function initProjectsFilter() {
-  // Create filter buttons container if it doesn't exist
+function initModernProjects() {
+  // 1. Create and insert filter buttons
+  createFilterButtons();
+  
+  // 2. Add data-category to project cards
+  addCategoriesToProjects();
+  
+  // 3. Initialize modals
+  initModernModals();
+  
+  // 4. Initialize carousels
+  initModernCarousels();
+  
+  // 5. Add scroll animations
+  initScrollAnimations();
+  
+  // 6. Add mouse effects
+  initMouseEffects();
+  
+  // 7. Add project tags
+  addProjectTags();
+  
+  // 8. Initialize image lazy loading
+  initImageLoading();
+}
+
+// 1. Filter Buttons
+function createFilterButtons() {
   const projectsSection = document.getElementById('projects');
-  if (!projectsSection.querySelector('.projects__filter')) {
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'projects__filter container';
+  if (!projectsSection) return;
+  
+  const filterContainer = document.createElement('div');
+  filterContainer.className = 'projects__filter container';
+  
+  const filters = [
+    { id: 'all', text: 'All Projects', icon: 'ri-grid-fill' },
+    { id: 'architecture', text: 'Architecture', icon: 'ri-building-4-line' },
+    { id: 'low-poly', text: 'Low Poly', icon: 'ri-shapes-line' },
+    { id: 'hardsurface', text: 'Hard Surface', icon: 'ri-cpu-line' },
+    { id: 'environment', text: 'Environment', icon: 'ri-landscape-line' }
+  ];
+  
+  filters.forEach(filter => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.setAttribute('data-filter', filter.id);
+    btn.innerHTML = `
+      <i class="${filter.icon}"></i>
+      <span>${filter.text}</span>
+    `;
     
-    const filters = [
-      { id: 'all', text: 'All Projects' },
-      { id: 'architecture', text: 'Architecture' },
-      { id: 'low-poly', text: 'Low Poly' },
-      { id: 'hardsurface', text: 'Hard Surface' }
-    ];
+    if (filter.id === 'all') {
+      btn.classList.add('active');
+    }
     
-    filters.forEach(filter => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.setAttribute('data-filter', filter.id);
-      btn.textContent = filter.text;
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
       
-      if (filter.id === 'all') {
-        btn.classList.add('active');
-      }
+      // Animation for button click
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
       
-      filterContainer.appendChild(btn);
+      filterProjects(filter.id);
     });
     
-    // Insert after section title
-    const sectionTitle = projectsSection.querySelector('.section__title');
+    filterContainer.appendChild(btn);
+  });
+  
+  // Insert after section title
+  const sectionTitle = projectsSection.querySelector('.section__title');
+  if (sectionTitle && filterContainer) {
     sectionTitle.insertAdjacentElement('afterend', filterContainer);
   }
-  
-  // Add data-category to project cards
+}
+
+// 2. Add categories to projects
+function addCategoriesToProjects() {
   const projectsCards = document.querySelectorAll('.projects__card');
-  const categories = ['architecture', 'low-poly', 'hardsurface', 'low-poly', 'architecture', 'low-poly', 'low-poly', 'low-poly', 'low-poly'];
+  const categories = [
+    'architecture',  // Mosque
+    'low-poly',      // Sushi
+    'hardsurface',   // Turret
+    'low-poly',      // Animals
+    'architecture',  // House
+    'environment',   // Castle 1
+    'environment',   // Castle 2
+    'environment',   // Castle 3
+    'environment'    // Castle 4
+  ];
   
   projectsCards.forEach((card, index) => {
     card.setAttribute('data-category', categories[index] || 'all');
   });
+}
+
+// 3. Filter Projects Function
+function filterProjects(filterValue) {
+  const projectsCards = document.querySelectorAll('.projects__card');
+  const filterBtns = document.querySelectorAll('.filter-btn');
   
-  // Filter functionality
-  document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('filter-btn')) {
-      const filterBtns = document.querySelectorAll('.filter-btn');
-      const filterValue = e.target.getAttribute('data-filter');
-      
-      // Update active button
-      filterBtns.forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      
-      // Filter projects
-      projectsCards.forEach(card => {
-        const cardCategory = card.getAttribute('data-category');
-        
-        if (filterValue === 'all' || cardCategory === filterValue) {
-          card.style.display = 'block';
-          card.style.animation = 'fadeInUp 0.4s forwards';
-        } else {
-          card.style.animation = 'fadeOut 0.3s forwards';
-          setTimeout(() => {
-            card.style.display = 'none';
-          }, 300);
-        }
-      });
+  // Update active button
+  filterBtns.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-filter') === filterValue) {
+      btn.classList.add('active');
     }
   });
   
-  // Add fadeOut animation
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: translateY(20px);
-      }
+  // Filter projects with animation
+  projectsCards.forEach(card => {
+    const cardCategory = card.getAttribute('data-category');
+    
+    if (filterValue === 'all' || cardCategory === filterValue) {
+      // Show with animation
+      card.style.display = 'block';
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0) rotateX(0) scale(1)';
+      }, 50);
+    } else {
+      // Hide with animation
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px) rotateX(10deg) scale(0.95)';
+      setTimeout(() => {
+        card.style.display = 'none';
+      }, 300);
     }
-  `;
-  document.head.appendChild(style);
+  });
 }
 
-// Modal system
-function initModalSystem() {
+// 4. Modal System
+function initModernModals() {
   const modalBtns = document.querySelectorAll('.view-project-btn');
   const modals = document.querySelectorAll('.project-modal');
   const closeBtns = document.querySelectorAll('.close-modal');
   
-  // Open modal
+  // Open modal with animation
   modalBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const modalId = this.getAttribute('data-modal');
       const modal = document.getElementById(modalId);
       
       if (modal) {
+        // Add ripple effect to button
+        createRippleEffect(this, e);
+        
+        // Show modal
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        initCarousel(modal);
+        
+        // Reset carousel to first slide
+        resetCarouselToFirst(modal);
+        
+        // Start carousel auto-slide
+        startCarouselAutoSlide(modal);
       }
     });
   });
   
   // Close modal
   closeBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const modal = this.closest('.project-modal');
       closeModal(modal);
     });
@@ -681,129 +743,399 @@ function initModalSystem() {
       }
     }
   });
-  
-  function closeModal(modal) {
+}
+
+function closeModal(modal) {
+  if (modal) {
     modal.classList.remove('active');
     document.body.style.overflow = '';
+    
+    // Stop carousel auto-slide
+    stopCarouselAutoSlide(modal);
   }
 }
 
-// Carousel functionality
-function initCarousel(modal) {
-  const carouselInner = modal.querySelector('.carousel-inner');
-  const carouselItems = modal.querySelectorAll('.carousel-item');
-  const prevBtn = modal.querySelector('.carousel-control.prev');
-  const nextBtn = modal.querySelector('.carousel-control.next');
-  const indicators = modal.querySelectorAll('.indicator');
+// 5. Ripple Effect
+function createRippleEffect(element, event) {
+  const ripple = document.createElement('div');
+  const rect = element.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
   
-  let currentIndex = 0;
-  let slideInterval;
+  ripple.style.cssText = `
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: rippleExpand 0.6s ease-out;
+    width: ${size}px;
+    height: ${size}px;
+    top: ${y}px;
+    left: ${x}px;
+    pointer-events: none;
+    z-index: 1;
+  `;
   
-  function showSlide(index) {
-    if (index < 0) index = carouselItems.length - 1;
-    if (index >= carouselItems.length) index = 0;
-    
-    currentIndex = index;
-    carouselInner.style.transform = `translateX(-${index * 100}%)`;
-    
-    // Update active classes
-    carouselItems.forEach((item, i) => {
-      item.classList.remove('active');
-      if (i === index) item.classList.add('active');
-    });
-    
-    indicators.forEach((indicator, i) => {
-      indicator.classList.remove('active');
-      if (i === index) indicator.classList.add('active');
-    });
+  element.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+}
+
+// Add CSS for ripple animation
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+  @keyframes rippleExpand {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
   }
-  
-  // Previous button
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      stopAutoSlide();
-      showSlide(currentIndex - 1);
-      startAutoSlide();
-    });
-  }
-  
-  // Next button
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      stopAutoSlide();
-      showSlide(currentIndex + 1);
-      startAutoSlide();
-    });
-  }
-  
-  // Indicators
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => {
-      stopAutoSlide();
-      showSlide(index);
-      startAutoSlide();
-    });
+`;
+document.head.appendChild(rippleStyle);
+
+// 6. Carousel System
+function initModernCarousels() {
+  // Initialize all carousels on page load
+  document.querySelectorAll('.carousel').forEach(carousel => {
+    initCarousel(carousel);
   });
   
-  function startAutoSlide() {
-    stopAutoSlide();
-    slideInterval = setInterval(() => {
-      showSlide(currentIndex + 1);
-    }, 4000);
+  // Handle carousel navigation
+  document.addEventListener('click', function(e) {
+    // Handle carousel navigation buttons
+    if (e.target.closest('.carousel-control')) {
+      const button = e.target.closest('.carousel-control');
+      handleCarouselNavigation(button);
+    }
+    
+    // Handle indicator clicks
+    if (e.target.closest('.indicator')) {
+      const indicator = e.target.closest('.indicator');
+      handleIndicatorClick(indicator);
+    }
+  });
+  
+  // Add touch swipe support
+  document.querySelectorAll('.carousel').forEach(carousel => {
+    let startX = 0;
+    let endX = 0;
+    
+    carousel.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    });
+    
+    carousel.addEventListener('touchend', e => {
+      endX = e.changedTouches[0].clientX;
+      handleSwipe(carousel, startX, endX);
+    });
+  });
+}
+
+function initCarousel(carousel) {
+  const items = carousel.querySelectorAll('.carousel-item');
+  const indicators = carousel.querySelectorAll('.indicator');
+  
+  // Initialize first item as active
+  if (items.length > 0) {
+    items[0].classList.add('active');
+  }
+  if (indicators.length > 0) {
+    indicators[0].classList.add('active');
   }
   
-  function stopAutoSlide() {
-    clearInterval(slideInterval);
+  // Store interval ID for auto-slide
+  carousel.dataset.intervalId = null;
+}
+
+function handleCarouselNavigation(button) {
+  const carousel = button.closest('.carousel');
+  const items = carousel.querySelectorAll('.carousel-item');
+  const indicators = carousel.querySelectorAll('.indicator');
+  
+  let currentIndex = Array.from(items).findIndex(item => 
+    item.classList.contains('active')
+  );
+  
+  if (button.classList.contains('prev')) {
+    currentIndex = (currentIndex - 1 + items.length) % items.length;
+  } else if (button.classList.contains('next')) {
+    currentIndex = (currentIndex + 1) % items.length;
   }
   
-  // Start auto slide
-  startAutoSlide();
+  updateCarousel(carousel, currentIndex);
+}
+
+function handleIndicatorClick(indicator) {
+  const slideTo = parseInt(indicator.getAttribute('data-slide-to'));
+  const carousel = indicator.closest('.carousel');
+  updateCarousel(carousel, slideTo);
+}
+
+function handleSwipe(carousel, startX, endX) {
+  const swipeThreshold = 50;
+  const difference = startX - endX;
   
-  // Pause on hover
-  if (carouselInner) {
-    carouselInner.addEventListener('mouseenter', stopAutoSlide);
-    carouselInner.addEventListener('mouseleave', startAutoSlide);
+  if (Math.abs(difference) > swipeThreshold) {
+    const items = carousel.querySelectorAll('.carousel-item');
+    const currentIndex = Array.from(items).findIndex(item => 
+      item.classList.contains('active')
+    );
+    
+    if (difference > 0) {
+      // Swipe left - next
+      updateCarousel(carousel, (currentIndex + 1) % items.length);
+    } else {
+      // Swipe right - previous
+      updateCarousel(carousel, (currentIndex - 1 + items.length) % items.length);
+    }
   }
 }
 
-// Image loading animation
+function updateCarousel(carousel, newIndex) {
+  const inner = carousel.querySelector('.carousel-inner');
+  const items = carousel.querySelectorAll('.carousel-item');
+  const indicators = carousel.querySelectorAll('.indicator');
+  
+  // Update carousel position
+  if (inner) {
+    inner.style.transform = `translateX(-${newIndex * 100}%)`;
+  }
+  
+  // Update active item
+  items.forEach((item, index) => {
+    item.classList.remove('active');
+    if (index === newIndex) {
+      item.classList.add('active');
+    }
+  });
+  
+  // Update indicators
+  indicators.forEach((indicator, index) => {
+    indicator.classList.remove('active');
+    if (index === newIndex) {
+      indicator.classList.add('active');
+    }
+  });
+}
+
+function resetCarouselToFirst(modal) {
+  const carousel = modal.querySelector('.carousel');
+  if (carousel) {
+    updateCarousel(carousel, 0);
+  }
+}
+
+function startCarouselAutoSlide(modal) {
+  const carousel = modal.querySelector('.carousel');
+  if (!carousel) return;
+  
+  // Clear existing interval
+  if (carousel.dataset.intervalId) {
+    clearInterval(carousel.dataset.intervalId);
+  }
+  
+  // Start new interval
+  carousel.dataset.intervalId = setInterval(() => {
+    const nextBtn = carousel.querySelector('.carousel-control.next');
+    if (nextBtn) {
+      handleCarouselNavigation(nextBtn);
+    }
+  }, 4000);
+}
+
+function stopCarouselAutoSlide(modal) {
+  const carousel = modal.querySelector('.carousel');
+  if (carousel && carousel.dataset.intervalId) {
+    clearInterval(carousel.dataset.intervalId);
+    carousel.dataset.intervalId = null;
+  }
+}
+
+// 7. Scroll Animations
+function initScrollAnimations() {
+  const projectsCards = document.querySelectorAll('.projects__card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        // Add delay based on index
+        setTimeout(() => {
+          entry.target.style.animation = 'cardEntrance 0.8s forwards';
+        }, index * 100);
+        
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  });
+  
+  projectsCards.forEach(card => {
+    observer.observe(card);
+  });
+}
+
+// 8. Mouse Effects
+function initMouseEffects() {
+  const projectsCards = document.querySelectorAll('.projects__card');
+  
+  projectsCards.forEach(card => {
+    // Mouse move effect for 3D tilt
+    card.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateY = ((x - centerX) / centerX) * 5;
+      const rotateX = ((centerY - y) / centerY) * 5;
+      
+      this.style.transform = `
+        translateY(-15px) 
+        rotateX(${rotateX}deg) 
+        rotateY(${rotateY}deg) 
+        scale(1.02)
+      `;
+      
+      // Parallax effect on image
+      const img = this.querySelector('.projects__img');
+      if (img) {
+        const depth = 20;
+        const moveX = (x - centerX) / depth;
+        const moveY = (y - centerY) / depth;
+        img.style.transform = `
+          scale(1.15) 
+          translate(${moveX}px, ${moveY}px) 
+          rotateZ(${rotateY * 0.2}deg)
+        `;
+      }
+    });
+    
+    // Reset on mouse leave
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+      
+      const img = this.querySelector('.projects__img');
+      if (img) {
+        img.style.transform = '';
+      }
+    });
+    
+    // Card click effect
+    card.addEventListener('click', function(e) {
+      if (!e.target.closest('.view-project-btn') && !e.target.closest('button')) {
+        // Create click effect
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 200);
+      }
+    });
+  });
+}
+
+// 9. Add Project Tags
+function addProjectTags() {
+  const projectsCards = document.querySelectorAll('.projects__card');
+  const tagsData = [
+    ['3D Modeling', 'Architecture', 'Blender'],
+    ['Low Poly', 'Food', 'Stylized'],
+    ['Hard Surface', 'Sci-Fi', 'Weapon'],
+    ['Low Poly', 'Animals', 'Cute'],
+    ['Architecture', 'Traditional', 'House'],
+    ['Low Poly', 'Fantasy', 'Environment'],
+    ['Low Poly', 'Castle', 'Environment'],
+    ['Low Poly', 'Castle', 'Environment'],
+    ['Low Poly', 'Castle', 'Environment']
+  ];
+  
+  projectsCards.forEach((card, index) => {
+    // Check if tags already exist
+    if (card.querySelector('.projects__tags')) return;
+    
+    const tagsContainer = document.createElement('div');
+    tagsContainer.className = 'projects__tags';
+    
+    tagsData[index].forEach(tag => {
+      const tagElement = document.createElement('span');
+      tagElement.className = 'project-tag';
+      tagElement.textContent = tag;
+      
+      // Add hover effect
+      tagElement.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px) scale(1.1)';
+        this.style.boxShadow = '0 8px 20px rgba(var(--first-color-rgb), 0.2)';
+      });
+      
+      tagElement.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+      });
+      
+      tagsContainer.appendChild(tagElement);
+    });
+    
+    // Insert tags after description
+    const description = card.querySelector('.projects__description');
+    if (description) {
+      description.parentNode.insertBefore(tagsContainer, description.nextSibling);
+    }
+  });
+}
+
+// 10. Image Loading
 function initImageLoading() {
   const projectImages = document.querySelectorAll('.projects__img');
   
   projectImages.forEach(img => {
-    // Add loading class initially
-    img.classList.add('loading');
-    
-    // Remove loading class when image loads
-    if (img.complete) {
-      img.classList.remove('loading');
-    } else {
+    // Add loading class if image hasn't loaded
+    if (!img.complete) {
+      img.classList.add('loading');
+      
       img.addEventListener('load', function() {
         this.classList.remove('loading');
+        this.style.animation = 'imageFocus 0.8s ease-out';
       });
       
       img.addEventListener('error', function() {
         this.classList.remove('loading');
-        this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" font-family="Arial" font-size="16" text-anchor="middle" fill="%23999">Image not found</text></svg>';
+        this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" font-family="Arial" font-size="14" text-anchor="middle" fill="%23999">Image not found</text></svg>';
       });
     }
   });
 }
 
-// Hover effects
-function initHoverEffects() {
-  const projectsCards = document.querySelectorAll('.projects__card');
-  
-  projectsCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.zIndex = '10';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      this.style.zIndex = '1';
-    });
+// Initialize CSS variables
+addCSSVariables();
+
+// 12. Handle window resize
+window.addEventListener('resize', function() {
+  // Reset card transforms on resize
+  document.querySelectorAll('.projects__card').forEach(card => {
+    card.style.transform = '';
   });
-}
+});
+
+// 13. Handle page load
+window.addEventListener('load', function() {
+  // Add loaded class for animations
+  document.body.classList.add('loaded');
+  
+  // Animate filter buttons on load
+  setTimeout(() => {
+    document.querySelectorAll('.filter-btn').forEach((btn, index) => {
+      setTimeout(() => {
+        btn.style.animation = 'pulse 2s infinite';
+      }, index * 100);
+    });
+  }, 1000);
+});
 
 
 /*=============== SCROLL REVEAL ANIMATION ===============*/
