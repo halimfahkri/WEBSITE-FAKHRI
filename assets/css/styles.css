@@ -1263,7 +1263,7 @@ img {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: eridden;
   cursor: pointer;
   border: 2px solid transparent;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
@@ -3817,3 +3817,316 @@ img {
   }
 }
 
+/*=============== MODERN HERO IMAGE ===============*/
+.hero__image {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.hero__image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  border-radius: 30px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  animation: floatImage 6s ease-in-out infinite;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(var(--first-color-rgb), 0.1),
+    0 0 60px rgba(var(--first-color-rgb), 0.2);
+}
+
+@keyframes floatImage {
+  0%, 100% {
+    transform: 
+      translateY(0) 
+      rotateX(0) 
+      rotateY(0);
+  }
+  50% {
+    transform: 
+      translateY(-20px) 
+      rotateX(5deg) 
+      rotateY(5deg);
+  }
+}
+
+.hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.1);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: 
+    brightness(1.05) 
+    contrast(1.1) 
+    saturate(1.1);
+  animation: imageReveal 1.5s ease-out;
+}
+
+@keyframes imageReveal {
+  from {
+    opacity: 0;
+    transform: scale(1.1) translateY(50px);
+    filter: blur(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Image Frame Effect */
+.hero__image-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(var(--first-color-rgb), 0.3);
+  border-radius: 30px;
+  box-shadow: 
+    inset 0 0 30px rgba(var(--first-color-rgb), 0.2),
+    inset 0 0 60px rgba(var(--first-color-rgb), 0.1);
+  pointer-events: none;
+  z-index: 2;
+  animation: framePulse 4s ease-in-out infinite;
+}
+
+@keyframes framePulse {
+  0%, 100% {
+    border-color: rgba(var(--first-color-rgb), 0.3);
+    box-shadow: 
+      inset 0 0 30px rgba(var(--first-color-rgb), 0.2),
+      inset 0 0 60px rgba(var(--first-color-rgb), 0.1);
+  }
+  50% {
+    border-color: rgba(var(--first-color-rgb), 0.5);
+    box-shadow: 
+      inset 0 0 50px rgba(var(--first-color-rgb), 0.3),
+      inset 0 0 80px rgba(var(--first-color-rgb), 0.2);
+  }
+}
+
+/* Floating Particles */
+.hero__particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hero__particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px rgba(var(--first-color-rgb), 0.8),
+    0 0 20px rgba(var(--first-color-rgb), 0.5);
+  animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+
+
+/* Scan Line Effect */
+.hero__image-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: scanLine 4s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes scanLine {
+  0% {
+    top: -100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Corner Accents */
+.hero__corner-top-left,
+.hero__corner-bottom-right {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero__corner-top-left {
+  top: 20px;
+  left: 20px;
+  border-top: 3px solid rgba(var(--first-color-rgb), 0.6);
+  border-left: 3px solid rgba(var(--first-color-rgb), 0.6);
+  border-radius: 5px 0 0 0;
+  animation: cornerPulse 2s ease-in-out infinite;
+}
+
+.hero__corner-bottom-right {
+  bottom: 20px;
+  right: 20px;
+  border-bottom: 3px solid rgba(var(--second-color-rgb), 0.6);
+  border-right: 3px solid rgba(var(--second-color-rgb), 0.6);
+  border-radius: 0 0 5px 0;
+  animation: cornerPulse 2s ease-in-out infinite reverse;
+}
+
+@keyframes cornerPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Hover Effects */
+@media (hover: hover) {
+  .hero__image-wrapper:hover {
+    box-shadow: 
+      0 35px 70px rgba(0, 0, 0, 0.3),
+      0 0 0 2px rgba(var(--first-color-rgb), 0.2),
+      0 0 80px rgba(var(--first-color-rgb), 0.3);
+  }
+  
+  .hero__image-wrapper:hover .hero__image-glow {
+    opacity: 1;
+    filter: blur(80px);
+    animation: glowIntensify 0.5s ease-out forwards;
+  }
+  
+  @keyframes glowIntensify {
+    to {
+      opacity: 1;
+      filter: blur(80px);
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hero__image-wrapper {
+    height: 500px;
+  }
+  
+  .hero__image-glow {
+    filter: blur(40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__image {
+    max-width: 450px;
+  }
+  
+  .hero__image-wrapper {
+    height: 450px;
+    border-radius: 25px;
+  }
+  
+  .hero__image-frame {
+    border-radius: 25px;
+  }
+  
+  .hero__image-glow {
+    filter: blur(30px);
+  }
+  
+  .hero__corner-top-left,
+  .hero__corner-bottom-right {
+    width: 15px;
+    height: 15px;
+    top: 15px;
+    left: 15px;
+  }
+  
+  .hero__corner-bottom-right {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  @keyframes floatImage {
+    0%, 100% {
+      transform: translateY(0) rotateX(0);
+    }
+    50% {
+      transform: translateY(-15px) rotateX(3deg);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__image {
+    max-width: 350px;
+  }
+  
+  .hero__image-wrapper {
+    height: 350px;
+    border-radius: 20px;
+  }
+  
+  .hero__image-frame {
+    border-radius: 20px;
+  }
+  
+  .hero__image-glow {
+    filter: blur(20px);
+  }
+  
+  .hero__corner-top-left,
+  .hero__corner-bottom-right {
+    width: 12px;
+    height: 12px;
+    top: 12px;
+    left: 12px;
+  }
+  
+  .hero__corner-bottom-right {
+    bottom: 12px;
+    right: 12px;
+  }
+}
